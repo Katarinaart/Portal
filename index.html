@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARHOMUS PORTAL — Партнёрская презентация</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: #080805;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 16px;
+font-family: ‘Helvetica Neue’, Arial, sans-serif;
+}
+
+.grain {
+position: fixed;
+inset: 0;
+opacity: 0.03;
+pointer-events: none;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 200 200’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23n)’/%3E%3C/svg%3E”);
+background-size: 200px 200px;
+}
+
+.deck {
+width: 100%;
+max-width: 900px;
+aspect-ratio: 16/9;
+background: #0C0B08;
+border: 1px solid #1E1D18;
+position: relative;
+overflow: hidden;
+box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px #1E1D18;
+}
+
+.corner { position: absolute; width: 20px; height: 20px; }
+.corner.tl { top: 16px; left: 16px; border-top: 1px solid #C9A84C33; border-left: 1px solid #C9A84C33; }
+.corner.tr { top: 16px; right: 16px; border-top: 1px solid #C9A84C33; border-right: 1px solid #C9A84C33; }
+.corner.bl { bottom: 16px; left: 16px; border-bottom: 1px solid #C9A84C33; border-left: 1px solid #C9A84C33; }
+.corner.br { bottom: 16px; right: 16px; border-bottom: 1px solid #C9A84C33; border-right: 1px solid #C9A84C33; }
+
+.slide-num {
+position: absolute;
+bottom: 24px;
+right: 40px;
+font-family: ‘Courier New’, monospace;
+font-size: 10px;
+color: #2A2820;
+letter-spacing: 2px;
+}
+
+.slide {
+position: absolute;
+inset: 0;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 48px 56px;
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.5s ease, transform 0.5s ease;
+pointer-events: none;
+}
+
+.slide.active {
+opacity: 1;
+transform: translateY(0);
+pointer-events: auto;
+}
+
+.tag {
+display: inline-block;
+font-family: ‘Courier New’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: #C9A84C;
+border-bottom: 1px solid #C9A84C44;
+padding-bottom: 4px;
+margin-bottom: 24px;
+}
+
+h1.main {
+font-family: Georgia, ‘Times New Roman’, serif;
+font-size: clamp(36px, 6vw, 64px);
+font-weight: 400;
+line-height: 1.1;
+color: #F5F0E8;
+text-align: center;
+}
+
+h2 {
+font-family: Georgia, ‘Times New Roman’, serif;
+font-size: clamp(20px, 2.8vw, 34px);
+font-weight: 400;
+color: #F5F0E8;
+margin-bottom: 20px;
+}
+
+.gold { color: #C9A84C; }
+
+.divider {
+width: 40px;
+height: 1px;
+background: #C9A84C;
+margin: 20px auto;
+}
+
+p.body {
+font-size: clamp(11px, 1.4vw, 14px);
+line-height: 1.75;
+color: #A09880;
+}
+
+.row {
+display: flex;
+gap: 14px;
+width: 100%;
+flex-wrap: wrap;
+}
+
+.stat-box {
+flex: 1 1 150px;
+border: 1px solid #2A2820;
+padding: 20px 16px;
+background: #0F0E0A;
+}
+
+.stat-value {
+font-family: Georgia, serif;
+font-size: clamp(18px, 2.5vw, 30px);
+color: #C9A84C;
+margin-bottom: 6px;
+}
+
+.stat-label {
+font-size: 11px;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: #F5F0E8;
+margin-bottom: 4px;
+}
+
+.stat-sub {
+font-size: 10px;
+color: #5A5548;
+line-height: 1.4;
+}
+
+.card {
+flex: 1 1 170px;
+border: 1px solid #1E1D18;
+padding: 16px;
+background: #0A0906;
+}
+
+.card-num {
+font-family: ‘Courier New’, monospace;
+font-size: 9px;
+color: #C9A84C;
+letter-spacing: 2px;
+margin-bottom: 8px;
+}
+
+.card-title {
+font-family: Georgia, serif;
+font-size: 13px;
+color: #F5F0E8;
+margin-bottom: 6px;
+}
+
+.card-body {
+font-size: 10px;
+color: #7A7060;
+line-height: 1.6;
+}
+
+.timeline-row {
+display: flex;
+gap: 20px;
+align-items: flex-start;
+padding-bottom: 12px;
+border-bottom: 1px solid #1A1910;
+}
+
+.t-time {
+font-family: ‘Courier New’, monospace;
+font-size: 10px;
+color: #C9A84C;
+letter-spacing: 1px;
+min-width: 90px;
+padding-top: 2px;
+flex-shrink: 0;
+}
+
+.t-block {
+font-size: 12px;
+color: #F5F0E8;
+font-weight: 500;
+margin-bottom: 3px;
+}
+
+.t-desc {
+font-size: 10px;
+color: #5A5548;
+line-height: 1.5;
+}
+
+.arena-tag {
+background: #C9A84C11;
+border: 1px solid #C9A84C33;
+padding: 5px 10px;
+font-family: ‘Courier New’, monospace;
+font-size: 9px;
+color: #C9A84C;
+letter-spacing: 1px;
+display: inline-block;
+}
+
+.zone-tag {
+font-family: ‘Courier New’, monospace;
+font-size: 9px;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: #F5F0E8;
+border: 1px solid #2A2820;
+padding: 6px 10px;
+background: #0F0E0A;
+white-space: nowrap;
+}
+
+.fin-row {
+display: flex;
+justify-content: space-between;
+border-bottom: 1px solid #1A1910;
+padding: 5px 0;
+gap: 8px;
+}
+
+.fin-label { font-size: 10px; color: #A09880; }
+.fin-val { font-size: 10px; color: #C9A84C; }
+
+.fin-total {
+display: flex;
+justify-content: space-between;
+padding: 7px 0;
+}
+
+.fin-total-label { font-size: 11px; color: #F5F0E8; }
+.fin-total-val { font-size: 11px; color: #C9A84C; }
+
+.highlight-box {
+background: #C9A84C11;
+border: 1px solid #C9A84C33;
+padding: 14px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+margin-top: 12px;
+}
+
+.highlight-label { font-size: 12px; color: #F5F0E8; }
+.highlight-val {
+font-family: Georgia, serif;
+font-size: 22px;
+color: #C9A84C;
+}
+
+.compare-box {
+flex: 1 1 220px;
+border: 1px solid #1E1D18;
+padding: 20px;
+background: #0A0906;
+}
+
+.compare-box.active-box {
+border-color: #C9A84C44;
+background: #0F0E08;
+}
+
+.compare-tag {
+font-family: ‘Courier New’, monospace;
+font-size: 9px;
+letter-spacing: 2px;
+margin-bottom: 12px;
+}
+
+.compare-val {
+font-family: Georgia, serif;
+font-size: 26px;
+margin-bottom: 10px;
+}
+
+.dot-list-item {
+display: flex;
+gap: 12px;
+align-items: flex-start;
+padding-bottom: 9px;
+border-bottom: 1px solid #1A1910;
+margin-bottom: 9px;
+}
+
+.dot-list-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+.dot { width: 4px; height: 4px; background: #C9A84C; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+.proposal-box {
+border: 1px solid #C9A84C44;
+padding: 24px 28px;
+background: #0F0E08;
+margin-bottom: 20px;
+width: 100%;
+max-width: 520px;
+}
+
+/* Nav */
+.nav {
+display: flex;
+align-items: center;
+gap: 24px;
+margin-top: 20px;
+}
+
+.btn {
+background: transparent;
+border: 1px solid #2A2820;
+color: #A09880;
+padding: 8px 22px;
+font-family: ‘Courier New’, monospace;
+font-size: 10px;
+letter-spacing: 2px;
+cursor: pointer;
+transition: all 0.2s;
+}
+
+.btn:disabled { color: #2A2820; cursor: default; }
+
+.btn.primary {
+background: #C9A84C;
+border-color: #C9A84C;
+color: #080805;
+}
+
+.btn.primary:disabled {
+background: transparent;
+color: #2A2820;
+}
+
+.dots { display: flex; gap: 6px; }
+
+.dot-nav {
+height: 4px;
+background: #2A2820;
+cursor: pointer;
+transition: all 0.3s;
+border-radius: 2px;
+border: none;
+}
+
+.dot-nav.active-dot {
+width: 20px;
+background: #C9A84C;
+}
+
+.dot-nav:not(.active-dot) { width: 4px; }
+
+/* Slide-specific layouts */
+.cover-inner { text-align: center; max-width: 600px; }
+.cover-sub { font-family: ‘Courier New’, monospace; font-size: 9px; letter-spacing: 3px; color: #2A2820; margin-top: 28px; }
+
+.two-col { display: flex; gap: 36px; align-items: flex-start; flex-wrap: wrap; width: 100%; max-width: 760px; }
+.two-col-l { flex: 1 1 260px; }
+.two-col-r { flex: 1 1 180px; display: flex; flex-direction: column; gap: 10px; }
+
+.bullet-item { display: flex; align-items: center; gap: 10px; }
+.bullet-dot { width: 4px; height: 4px; background: #C9A84C; border-radius: 50%; flex-shrink: 0; }
+.bullet-text { font-size: 11px; color: #7A7060; }
+
+.slide-inner { width: 100%; max-width: 780px; }
+.slide-center { text-align: center; max-width: 540px; }
+</style>
+
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="deck" id="deck">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="slide-num" id="slideNum">01 / 11</div>
+
+  <!-- SLIDE 0: COVER -->
+
+  <div class="slide active" id="slide-0">
+    <div class="cover-inner">
+      <div class="tag">ПАРТНЁРСКАЯ ПРЕЗЕНТАЦИЯ</div>
+      <h1 class="main">ARHOMUS<br><span class="gold">PORTAL</span></h1>
+      <div class="divider"></div>
+      <p class="body" style="text-align:center">
+        Иммерсивный офлайн-ивент нового поколения.<br>Москва · 2026
+      </p>
+      <div class="cover-sub">TIM VITER × RUSLAN</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: CONCEPT -->
+
+  <div class="slide" id="slide-1">
+    <div class="slide-inner">
+      <div class="tag">Концепция</div>
+      <h2>Что такое Arhomus Energy</h2>
+      <div class="two-col">
+        <div class="two-col-l">
+          <p class="body" style="margin-bottom:14px">
+            <span class="gold">Arhomus</span> — это не бренд и не компания. Это <span class="gold">энергия</span> — манифест особого образа жизни, объединяющий дизайн, искусство, архитектуру, технологии и развитие человека.
+          </p>
+          <p class="body">
+            Основатель — <span class="gold">Тим Виттер</span>. Арт-директор — <span class="gold">Катерина Арт</span> (проект Архивариус). Флагманский продукт — одежда с кодом <span class="gold">U8</span>.
+          </p>
+        </div>
+        <div class="two-col-r">
+          <div class="bullet-item"><div class="bullet-dot"></div><div class="bullet-text">Мода &amp; Дизайн</div></div>
+          <div class="bullet-item"><div class="bullet-dot"></div><div class="bullet-text">Искусство &amp; Арт</div></div>
+          <div class="bullet-item"><div class="bullet-dot"></div><div class="bullet-text">Архитектура</div></div>
+          <div class="bullet-item"><div class="bullet-dot"></div><div class="bullet-text">Технологии &amp; IT</div></div>
+          <div class="bullet-item"><div class="bullet-dot"></div><div class="bullet-text">Телесные практики</div></div>
+          <div class="bullet-item"><div class="bullet-dot"></div><div class="bullet-text">Предпринимательство</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: MISSION -->
+
+  <div class="slide" id="slide-2">
+    <div class="slide-inner">
+      <div class="tag">Миссия &amp; Цели</div>
+      <h2>Зачем мы это делаем</h2>
+      <div class="row">
+        <div class="card">
+          <div class="card-num">01</div>
+          <div class="card-title">Популяризация</div>
+          <div class="card-body">Вывести Arhomus в широкую аудиторию через иммерсивный живой опыт</div>
+        </div>
+        <div class="card">
+          <div class="card-num">02</div>
+          <div class="card-title">Монетизация</div>
+          <div class="card-body">Прямые продажи одежды, арт-объектов и партнёрских продуктов на площадке</div>
+        </div>
+        <div class="card">
+          <div class="card-num">03</div>
+          <div class="card-title">Экосистема</div>
+          <div class="card-body">Собрать сообщество коллекционеров, носителей кода, партнёров и единомышленников</div>
+        </div>
+        <div class="card">
+          <div class="card-num">04</div>
+          <div class="card-title">Контент</div>
+          <div class="card-body">Создать вирусный контент, медиа-охват и PR для бренда и площадки</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: AUDIENCE -->
+
+  <div class="slide" id="slide-3">
+    <div class="slide-inner">
+      <div class="tag">Аудитория &amp; Масштаб</div>
+      <h2>Кто придёт</h2>
+      <div class="row" style="margin-bottom:16px">
+        <div class="stat-box">
+          <div class="stat-value">1 500—2 000</div>
+          <div class="stat-label">Гостей суммарно</div>
+          <div class="stat-sub">За 2–3 дня мероприятия</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">500+</div>
+          <div class="stat-label">Единовременно</div>
+          <div class="stat-sub">На площадке в моменте</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">250 000 ₽</div>
+          <div class="stat-label">Средний чек</div>
+          <div class="stat-sub">За костюм Arhomus</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">20 млн</div>
+          <div class="stat-label">Охват Москвы</div>
+          <div class="stat-sub">Целевая аудитория</div>
+        </div>
+      </div>
+      <p class="body" style="font-size:11px">
+        Аудитория: <span class="gold">предприниматели МСБ и крупный бизнес</span>, коллекционеры, деятели искусства, архитекторы, IT-специалисты, лидеры мнений. CRM-базы Arhomus и партнёров. Хедлайнеры: Хакамада, галеристы из Арт-Москвы, предприниматели из сети Impact и Архивариус.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: PROGRAM -->
+
+  <div class="slide" id="slide-4">
+    <div class="slide-inner">
+      <div class="tag">Программа · 1 день</div>
+      <h2>Структура дня</h2>
+      <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+        <div class="timeline-row">
+          <div class="t-time">08:00—12:00</div>
+          <div>
+            <div class="t-block">Блок I · BODY</div>
+            <div class="t-desc">Йога, Цигун, Тайцзи, Гонг-медитация, Саунд-хилинг. Разогрев и настройка тела</div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="t-time">12:00—16:00</div>
+          <div>
+            <div class="t-block">Блок II · MIND / FORUM</div>
+            <div class="t-desc">3 трека/час · 12 треков · 24 спикера. Спичи по 20–30 мин. Дизайн, технологии, искусство, бизнес</div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="t-time">16:00—18:00</div>
+          <div>
+            <div class="t-block">Блок III · ARHOMUS PERFORMANCE</div>
+            <div class="t-desc">12 моделей в одежде Arhomus. Иммерсивная инсталляция U8 CODE + Манифест</div>
+          </div>
+        </div>
+        <div class="timeline-row" style="border-bottom:none">
+          <div class="t-time">18:00—04:00</div>
+          <div>
+            <div class="t-block">Блок IV · FLASH~DANCE / SOUND</div>
+            <div class="t-desc">Лайнап диджеев. Хедлайнер — Руслан. Клоузинг-сет в 04:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: ARENAS & ZONES -->
+
+  <div class="slide" id="slide-5">
+    <div class="slide-inner">
+      <div class="tag">Зонирование · 2–3 этажа</div>
+      <h2>Арены и зоны</h2>
+      <p class="body" style="font-size:11px;margin-bottom:10px"><span class="gold">5 тематических арен</span> — якорные программные пространства:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px">
+        <span class="arena-tag">ARHOMUS-Арена · U8 Code</span>
+        <span class="arena-tag">Design-Арена · Tim Viter</span>
+        <span class="arena-tag">Voice-Арена · Art Team</span>
+        <span class="arena-tag">Sound-Арена · Ruslan</span>
+        <span class="arena-tag">Body-Арена · Практики</span>
+        <span class="arena-tag">Business = MPAX-Арена</span>
+      </div>
+      <p class="body" style="font-size:11px;margin-bottom:10px"><span class="gold">Постоянные зоны</span> — среда погружения:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <span class="zone-tag">NEYRO</span>
+        <span class="zone-tag">FLASH~DANCE</span>
+        <span class="zone-tag">LABYRINTH</span>
+        <span class="zone-tag">BIO-HACKING</span>
+        <span class="zone-tag">COLLABORATION</span>
+        <span class="zone-tag">FOOD</span>
+        <span class="zone-tag">BAR</span>
+        <span class="zone-tag">ARCHITECTURE</span>
+        <span class="zone-tag">CONFERENCE</span>
+        <span class="zone-tag">GALLERY (закрытая)</span>
+        <span class="zone-tag">VIP (закрытая)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: TEAM -->
+
+  <div class="slide" id="slide-6">
+    <div class="slide-inner">
+      <div class="tag">Команда · ALIENCE</div>
+      <h2>Ключевые люди</h2>
+      <div class="row">
+        <div class="card">
+          <div class="card-title">Тим Виттер</div>
+          <div class="card-num" style="margin-bottom:6px">Основатель / Идеолог</div>
+          <div class="card-body">Design-Арена. Спикер. Автор Arhomus Energy</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Катерина Арт</div>
+          <div class="card-num" style="margin-bottom:6px">Арт-директор</div>
+          <div class="card-body">Архивариус. Галерея. Выставка работ</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Руслан</div>
+          <div class="card-num" style="margin-bottom:6px">Хедлайнер / Партнёр</div>
+          <div class="card-body">Sound-Арена. Клоузинг-сет. Площадка</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Артём Исай</div>
+          <div class="card-num" style="margin-bottom:6px">Партнёр · Impact</div>
+          <div class="card-body">IT-технологии. MPAX-зона. Бизнес-трек</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Альбина</div>
+          <div class="card-num" style="margin-bottom:6px">Практики</div>
+          <div class="card-body">Гонг, саунд-хилинг, женские практики</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Денис</div>
+          <div class="card-num" style="margin-bottom:6px">Архитектура</div>
+          <div class="card-body">Спикер. Макеты. Архитектурная зона</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: ECONOMICS -->
+
+  <div class="slide" id="slide-7">
+    <div class="slide-inner">
+      <div class="tag">Финансовая модель · Юнит-экономика</div>
+      <h2>Прогноз выручки</h2>
+      <div class="row" style="margin-bottom:12px">
+        <div style="flex:1 1 220px">
+          <p class="body" style="font-size:10px;color:#7A7060;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase">Билеты (3 уровня)</p>
+          <div class="fin-row"><span class="fin-label">Уровень I · 8 000 ₽ · 200 чел.</span><span class="fin-val">1 600 000 ₽</span></div>
+          <div class="fin-row"><span class="fin-label">Уровень II · 25 000 ₽ · 80 чел.</span><span class="fin-val">2 000 000 ₽</span></div>
+          <div class="fin-row"><span class="fin-label">Уровень III VIP · 50 000 ₽ · 50 чел.</span><span class="fin-val">2 500 000 ₽</span></div>
+          <div class="fin-total"><span class="fin-total-label">Итого билеты</span><span class="fin-total-val">≈ 6 100 000 ₽</span></div>
+        </div>
+        <div style="flex:1 1 220px">
+          <p class="body" style="font-size:10px;color:#7A7060;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase">Продукты &amp; Арт</p>
+          <div class="fin-row"><span class="fin-label">Одежда Arhomus (150 × 250К)</span><span class="fin-val">37 500 000 ₽</span></div>
+          <div class="fin-row"><span class="fin-label">Арт-объекты / аукцион</span><span class="fin-val">5 000 000+ ₽</span></div>
+          <div class="fin-row"><span class="fin-label">Партнёры (Impact, биолаб)</span><span class="fin-val">≈ 2 000 000 ₽</span></div>
+          <div class="fin-total"><span class="fin-total-label">Итого продукты</span><span class="fin-total-val">≈ 44 500 000+ ₽</span></div>
+        </div>
+      </div>
+      <div class="highlight-box">
+        <span class="highlight-label">Совокупная выручка (консервативно)</span>
+        <span class="highlight-val">≈ 50 000 000 ₽</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: PARTNERSHIP -->
+
+  <div class="slide" id="slide-8">
+    <div class="slide-inner">
+      <div class="tag">Модель партнёрства с площадкой</div>
+      <h2>Процент vs Аренда</h2>
+      <div class="row" style="margin-bottom:16px">
+        <div class="compare-box" style="opacity:0.55">
+          <div class="compare-tag" style="color:#5A5548">ФИКСИРОВАННАЯ АРЕНДА</div>
+          <div class="compare-val" style="color:#5A5548">12 000 000 ₽</div>
+          <p class="body" style="font-size:10px;color:#3A3830">Фиксированный риск на арендаторе. Площадка не участвует в успехе. Нет стимула содействовать.</p>
+        </div>
+        <div class="compare-box active-box">
+          <div class="compare-tag" style="color:#C9A84C">ПАРТНЁРСТВО · % С ВЫРУЧКИ</div>
+          <div class="compare-val" style="color:#C9A84C">20% = 10 000 000+ ₽</div>
+          <p class="body" style="font-size:10px">При выручке 50 млн. Плюс 100% выручки бара. Плюс PR, репутация, трафик для площадки.</p>
+        </div>
+      </div>
+      <p class="body" style="font-size:11px">
+        При консервативном сценарии (50 млн) <span class="gold">20% = 10 млн ₽</span> — без авансового риска. При реалистичном сценарии (70–80 млн) — <span class="gold">14–16 млн ₽</span>, что превышает фиксированную аренду.
+      </p>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: BENEFITS -->
+
+  <div class="slide" id="slide-9">
+    <div class="slide-inner">
+      <div class="tag">Что получает площадка</div>
+      <h2>Ценность для Руслана</h2>
+      <div class="row">
+        <div class="card">
+          <div style="font-size:16px;margin-bottom:8px">₽</div>
+          <div class="card-title">Доход выше аренды</div>
+          <div class="card-body">20% от 50–80 млн > 12 млн фиксированной аренды. Без авансового риска</div>
+        </div>
+        <div class="card">
+          <div style="font-size:16px;margin-bottom:8px">🍸</div>
+          <div class="card-title">Бар 100%</div>
+          <div class="card-body">Выручка бара полностью остаётся площадке. 500–1000 гостей в вечернее время</div>
+        </div>
+        <div class="card">
+          <div style="font-size:16px;margin-bottom:8px">📡</div>
+          <div class="card-title">PR &amp; Медиа</div>
+          <div class="card-body">Медиаосвещение ивента = покрытие площадки. Журналы, блогеры, соцсети</div>
+        </div>
+        <div class="card">
+          <div style="font-size:16px;margin-bottom:8px">👥</div>
+          <div class="card-title">Премиум-аудитория</div>
+          <div class="card-body">2 000 человек уровня МСБ, арт, архитектура, IT — потенциальные клиенты площадки</div>
+        </div>
+        <div class="card">
+          <div style="font-size:16px;margin-bottom:8px">🎵</div>
+          <div class="card-title">Руслан — хедлайнер</div>
+          <div class="card-body">Клоузинг-сет в 4:00 на собственной площадке. Имиджевый буст как музыканту</div>
+        </div>
+        <div class="card">
+          <div style="font-size:16px;margin-bottom:8px">♾</div>
+          <div class="card-title">Повторяемость</div>
+          <div class="card-body">При успехе — регулярный формат. Arhomus Portal как сезонный ивент площадки</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEP -->
+
+  <div class="slide" id="slide-10">
+    <div class="slide-center" style="display:flex;flex-direction:column;align-items:center">
+      <div class="tag">Следующий шаг</div>
+      <h2 style="text-align:center;margin-bottom:14px">Предложение</h2>
+      <p class="body" style="text-align:center;margin-bottom:20px">Предлагаем <span class="gold">партнёрское соглашение</span> на следующих условиях:</p>
+      <div class="proposal-box">
+        <div class="dot-list-item">
+          <div class="dot"></div>
+          <p class="body" style="font-size:11px">Площадка предоставляется без фиксированной аренды</p>
+        </div>
+        <div class="dot-list-item">
+          <div class="dot"></div>
+          <p class="body" style="font-size:11px">Доля площадки: <span class="gold">20%</span> от совокупной выручки ивента</p>
+        </div>
+        <div class="dot-list-item">
+          <div class="dot"></div>
+          <p class="body" style="font-size:11px">Бар и F&amp;B — полностью остаётся площадке</p>
+        </div>
+        <div class="dot-list-item">
+          <div class="dot"></div>
+          <p class="body" style="font-size:11px">Руслан — хедлайнер Sound-Арены (клоузинг-сет)</p>
+        </div>
+        <div class="dot-list-item">
+          <div class="dot"></div>
+          <p class="body" style="font-size:11px">Длительность: 2–3 дня · Москва · 2026</p>
+        </div>
+        <div class="dot-list-item" style="border-bottom:none;margin-bottom:0">
+          <div class="dot"></div>
+          <p class="body" style="font-size:11px">Совместная медиаподдержка и PR</p>
+        </div>
+      </div>
+      <p class="body" style="text-align:center;font-size:11px;color:#5A5548">Готовы к встрече для обсуждения деталей и подписания LOI</p>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+
+<div class="nav">
+  <button class="btn" id="btnPrev" onclick="navigate(-1)" disabled>← НАЗАД</button>
+  <div class="dots" id="dots"></div>
+  <button class="btn primary" id="btnNext" onclick="navigate(1)">ДАЛЕЕ →</button>
+</div>
+
+<script>
+  const TOTAL = 11;
+  let current = 0;
+
+  function buildDots() {
+    const container = document.getElementById('dots');
+    for (let i = 0; i < TOTAL; i++) {
+      const d = document.createElement('button');
+      d.className = 'dot-nav' + (i === 0 ? ' active-dot' : '');
+      d.setAttribute('aria-label', 'Слайд ' + (i + 1));
+      d.onclick = () => goTo(i);
+      container.appendChild(d);
+    }
+  }
+
+  function updateUI() {
+    document.querySelectorAll('.slide').forEach((s, i) => {
+      s.classList.toggle('active', i === current);
+    });
+    document.querySelectorAll('.dot-nav').forEach((d, i) => {
+      d.classList.toggle('active-dot', i === current);
+    });
+    document.getElementById('btnPrev').disabled = current === 0;
+    const btnNext = document.getElementById('btnNext');
+    btnNext.disabled = current === TOTAL - 1;
+    btnNext.className = current === TOTAL - 1 ? 'btn' : 'btn primary';
+    document.getElementById('slideNum').textContent =
+      String(current + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+  }
+
+  function navigate(dir) {
+    goTo(current + dir);
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= TOTAL) return;
+    current = index;
+    updateUI();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  });
+
+  buildDots();
+</script>
+
+</body>
+</html>
